@@ -2,6 +2,8 @@ from typing import Dict
 from src.models.settings.connection import db_connection_handler
 from src.models.entities.attendees import Attendees
 from src.models.entities.events import Events
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm.exc import NoResultFound
 
 class AttendeesRepository:
     def insert_attendee(self, attendee_info: Dict) -> Dict:
@@ -19,6 +21,8 @@ class AttendeesRepository:
                 database.session.commit()
                    
                 return attendee_info
+            except IntegrityError:
+                raise Exception('Evento ja cadastrado!')
             except Exception as exception:
                 database.session.rollback()
                 raise exception
@@ -39,6 +43,6 @@ class AttendeesRepository:
                         .one()
                 )
                 return attendee
-            except Exception as exception:
-                pass
+            except NoResultFound:
+                return None
                 
