@@ -6,7 +6,7 @@ event_route_bp = Blueprint("event_route", __name__)
 
 @event_route_bp.route("/events", methods=["POST"])
 def create_event():
-    http_request = HttpRequest(body = request.json)
+    http_request = HttpRequest(body=request.json)
     event_handler = EventHandler()
     
     http_response = event_handler.register(http_request)
@@ -16,5 +16,6 @@ def create_event():
 def get_event(event_id):
     event_handler = EventHandler()
     http_request = HttpRequest(param={"event_id": event_id})
+    
     http_response = event_handler.find_by_id(http_request)
     return jsonify(http_response.body), http_response.status_code
